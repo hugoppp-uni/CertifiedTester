@@ -13,9 +13,9 @@ fun main(args: Array<String>) {
     val typedArgs = parseArgs(args)
 
     println(
-        "Creating ${typedArgs.CoverageTypes.joinToString(", ")} Coverage " +
-                "from files '${typedArgs.Files.joinToString(separator = ", ")}' " +
-                "into directory '${typedArgs.OutputDir}'"
+        "Creating coverage into directory '${typedArgs.OutputDir}:\n\n" +
+                typedArgs.CoverageTypes.zip(typedArgs.Files)
+                    .joinToString(separator = "\n") { "${it.first}: ${it.second}" }
     )
 
 }
@@ -35,7 +35,7 @@ private fun parseArgs(args: Array<String>): Args {
         args.Files.forEach { if (!File(it).isFile) throw Exception("'$it' doesnt exist") }
         if (args.OutputDir?.let { File(it).isDirectory } == false)
             throw Exception("Output directory '${args.OutputDir}' does not exist")
-        if(args.CoverageTypes.count() != args.Files.count())
+        if (args.CoverageTypes.count() != args.Files.count())
             throw Exception("Count of input files does not match count of coverage types")
     }
 
@@ -44,6 +44,5 @@ private fun parseArgs(args: Array<String>): Args {
     validateArgs(typedArgs)
 
     return typedArgs
-
 }
 
