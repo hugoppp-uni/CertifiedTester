@@ -28,13 +28,15 @@ private fun parseArgs(args: Array<String>): Args {
     val outputDir by parser.option(ArgType.String, shortName = "o", description = "Output directory")
         .required()
     val coverageTypes by parser.option(ArgType.Choice<CoverageType>(), shortName = "c", description = "Coverage type")
-        .default(CoverageType.MMBUe)
         .multiple()
+        .required()
 
     fun validateArgs(args: Args) {
         args.Files.forEach { if (!File(it).isFile) throw Exception("'$it' doesnt exist") }
         if (args.OutputDir?.let { File(it).isDirectory } == false)
             throw Exception("Output directory '${args.OutputDir}' does not exist")
+        if(args.CoverageTypes.count() != args.Files.count())
+            throw Exception("Count of input files does not match count of coverage types")
     }
 
     parser.parse(args)
