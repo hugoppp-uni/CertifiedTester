@@ -2,7 +2,15 @@ import kotlinx.cli.*
 import java.io.File
 
 
-data class Args(val Files: List<String>, val OutputDir: String?, val CoverageTypes: List<CoverageType>)
+data class Args(val Files: List<String>, val OutputDir: String?, val CoverageTypes: List<CoverageType>) {
+    fun validate() {
+        Files.forEach { if (!File(it).isFile) throw Exception("'$it' doesnt exist") }
+        if (OutputDir?.let { File(it).isDirectory } == false)
+            throw Exception("Output directory '${OutputDir}' does not exist")
+        if (CoverageTypes.count() != Files.count())
+            throw Exception("Count of input files does not match count of coverage types")
+    }
+}
 
 enum class CoverageType {
     MMBUe,
@@ -31,17 +39,9 @@ private fun parseArgs(args: Array<String>): Args {
         .multiple()
         .required()
 
-    fun validateArgs(args: Args) {
-        args.Files.forEach { if (!File(it).isFile) throw Exception("'$it' doesnt exist") }
-        if (args.OutputDir?.let { File(it).isDirectory } == false)
-            throw Exception("Output directory '${args.OutputDir}' does not exist")
-        if (args.CoverageTypes.count() != args.Files.count())
-            throw Exception("Count of input files does not match count of coverage types")
-    }
-
     parser.parse(args)
     val typedArgs = Args(inputs, outputDir, coverageTypes)
-    validateArgs(typedArgs)
+    typedArgs.validate()
 
     return typedArgs
 }
