@@ -1,11 +1,17 @@
+import algorithms.MCDC
+import algorithms.MMBUe
 import kotlinx.cli.*
 import java.io.File
 
 
-data class Args(val Files: List<String>, val OutputDir: String?, val CoverageTypes: List<CoverageType>) {
+data class Args(val Files: List<String>, val OutputDir: String, val CoverageTypes: List<CoverageType>) {
     fun validate() {
-        Files.forEach { if (!File(it).isFile) throw Exception("'$it' doesnt exist") }
-        if (OutputDir?.let { File(it).isDirectory } == false)
+        Files.forEach {
+            val file = File(it)
+            if (!file.isFile) throw Exception("'$it' doesnt exist")
+            if (file.extension != "md") throw Exception("${file.extension} files are not supported")
+        }
+        if (!File(OutputDir).isDirectory)
             throw Exception("Output directory '${OutputDir}' does not exist")
         if (CoverageTypes.count() != Files.count())
             throw Exception("Count of input files does not match count of coverage types")
@@ -13,18 +19,41 @@ data class Args(val Files: List<String>, val OutputDir: String?, val CoverageTyp
 }
 
 enum class CoverageType {
-    MMBUe,
+    MMBUe, //condition coverage
     MCDC,
 }
 
 fun main(args: Array<String>) {
     val typedArgs = parseArgs(args)
 
+    val tasks = typedArgs.CoverageTypes.zip(typedArgs.Files)
     println(
         "Creating coverage into directory '${typedArgs.OutputDir}:\n\n" +
-                typedArgs.CoverageTypes.zip(typedArgs.Files)
-                    .joinToString(separator = "\n") { "${it.first}: ${it.second}" }
+                tasks.joinToString(separator = "\n") { "${it.first}: ${it.second}" }
     )
+
+    val outputDir = File(typedArgs.OutputDir)
+
+    for ((coverageType, filename) in tasks) {
+
+        val inputFile = File(filename)
+        val inputText = inputFile.readLines()
+        val decisionTable = DecisionTable.createFromMarkdown(inputText)
+
+        val testCasesToInclude = when (coverageType) {
+            CoverageType.MCDC -> MCDC().run(decisionTable)
+            CoverageType.MMBUe -> MMBUe().run(decisionTable)
+            else -> throw Exception("'$coverageType' is  unknown")
+        }
+
+        val outputFileName = "${coverageType}_${File(filename).name}"
+
+        val headerLineCount = 1
+        val linesToWrite = (inputText.take(headerLineCount) +
+                inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index + headerLineCount) })
+
+        File(outputDir, outputFileName).writeText(linesToWrite.joinToString("\n"))
+    }
 
 }
 
