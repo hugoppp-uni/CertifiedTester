@@ -2,7 +2,7 @@ import kotlinx.cli.*
 import java.io.File
 
 
-data class Args(val Files: List<String>, val OutputDir: String?, val coverageTypes: List<CoverageType>)
+data class Args(val Files: List<String>, val OutputDir: String?, val CoverageTypes: List<CoverageType>)
 
 enum class CoverageType {
     MMBUe,
@@ -12,11 +12,11 @@ enum class CoverageType {
 fun main(args: Array<String>) {
     val typedArgs = parseArgs(args)
 
-    println {
-        "Creating ${typedArgs.Files.joinToString(", ")} Coverage " +
-                "from files ${typedArgs.coverageTypes.joinToString(separator = ", ")} " +
-                "into directory ${typedArgs.OutputDir}"
-    }
+    println(
+        "Creating ${typedArgs.CoverageTypes.joinToString(", ")} Coverage " +
+                "from files '${typedArgs.Files.joinToString(separator = ", ")}' " +
+                "into directory '${typedArgs.OutputDir}'"
+    )
 
 }
 
