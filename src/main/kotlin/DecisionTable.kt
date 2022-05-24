@@ -1,4 +1,8 @@
-class DecisionTable(val Table: List<List<Boolean>>) {
+class DecisionTableRow (decisionList: List<Boolean>){
+    val evaluated : Boolean = decisionList.last()
+    val subExpressions = decisionList.dropLast(1)
+}
+class DecisionTable(val Rows: List<DecisionTableRow>) {
     companion object {
         data class MdResult(val DecisionTable: DecisionTable, val HeaderCount: Int)
 
@@ -6,7 +10,7 @@ class DecisionTable(val Table: List<List<Boolean>>) {
 
             var headerCount = 0
             var columnCount: Int? = null
-            val decisionTable = mutableListOf<List<Boolean>>()
+            val decisionTableRows = mutableListOf<DecisionTableRow>()
 
             for (line in mdLines) {
                 val fields = line
@@ -28,11 +32,12 @@ class DecisionTable(val Table: List<List<Boolean>>) {
                 else if(integerFields.count() != columnCount)
                     throw Exception("Invalid markdown")
 
-                decisionTable += integerFields.map { (it != 0) }
+                decisionTableRows += DecisionTableRow(integerFields.map { (it != 0) })
             }
 
-            return MdResult(DecisionTable(decisionTable), headerCount)
+            return MdResult(DecisionTable(decisionTableRows), headerCount)
         }
     }
+
 
 }
