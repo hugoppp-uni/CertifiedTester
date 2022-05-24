@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
 
         val inputFile = File(filename)
         val inputText = inputFile.readLines()
-        val decisionTable = DecisionTable.createFromMarkdown(inputText)
+        val (decisionTable, headerLineCount) = DecisionTable.createFromMarkdown(inputText)
 
         val testCasesToInclude = when (coverageType) {
             CoverageType.MCDC -> MCDC().run(decisionTable)
@@ -48,7 +48,6 @@ fun main(args: Array<String>) {
 
         val outputFileName = "${coverageType}_${File(filename).name}"
 
-        val headerLineCount = 1
         val linesToWrite = (inputText.take(headerLineCount) +
                 inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index + headerLineCount) })
 
