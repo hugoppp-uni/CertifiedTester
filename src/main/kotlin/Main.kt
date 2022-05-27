@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
         val outputFileName = "${coverageType}_${File(filename).name}"
 
         val linesToWrite = (inputText.take(headerLineCount) +
-                inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index + headerLineCount) })
+                inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index - headerLineCount) })
 
         File(outputDir, outputFileName).writeText(linesToWrite.joinToString("\n"))
     }
