@@ -36,24 +36,38 @@ fun main(args: Array<String>) {
 
     for ((coverageType, filename) in tasks) {
 
-        val inputFile = File(filename)
-        val inputText = inputFile.readLines()
-        val (decisionTable, headerLineCount) = DecisionTable.createFromMarkdown(inputText)
-
-        val testCasesToInclude = when (coverageType) {
-            CoverageType.MCDC -> MCDC().run(decisionTable)
-            CoverageType.MMBUe -> MMBUe().run(decisionTable)
-            else -> throw Exception("'$coverageType' is  unknown")
-        }
+        val linesToWrite = filterInvalidCasesFromFile(filename, coverageType)
 
         val outputFileName = "${coverageType}_${File(filename).name}"
-
-        val linesToWrite = (inputText.take(headerLineCount) +
-                inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index - headerLineCount) })
-
         File(outputDir, outputFileName).writeText(linesToWrite.joinToString("\n"))
     }
 
+}
+
+private fun filterInvalidCasesFromFile(
+    filename: String,
+    coverageType: CoverageType
+): List<String> {
+    val inputFile = File(filename)
+    val inputText = inputFile.readLines()
+    return filterInvalidCases(inputText, coverageType)
+}
+
+
+fun filterInvalidCases(
+    inputText: List<String>,
+    coverageType: CoverageType
+): List<String> {
+    val (decisionTable, headerLineCount) = DecisionTable.createFromMarkdown(inputText)
+
+    val testCasesToInclude = when (coverageType) {
+        CoverageType.MCDC -> MCDC().run(decisionTable)
+        CoverageType.MMBUe -> MMBUe().run(decisionTable)
+        else -> throw Exception("'$coverageType' is  unknown")
+    }
+
+    return (inputText.take(headerLineCount) +
+            inputText.filterIndexed { index, _ -> testCasesToInclude.contains(index - headerLineCount) })
 }
 
 private fun parseArgs(args: Array<String>): Args {
