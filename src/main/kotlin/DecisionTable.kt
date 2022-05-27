@@ -1,7 +1,8 @@
-class DecisionTableRow (decisionList: List<Boolean>){
-    val evaluated : Boolean = decisionList.last()
+class DecisionTableRow(decisionList: List<Boolean>) {
+    val evaluated: Boolean = decisionList.last()
     val subExpressions = decisionList.dropLast(1)
 }
+
 class DecisionTable(val Rows: List<DecisionTableRow>) {
     companion object {
         data class MdResult(val DecisionTable: DecisionTable, val HeaderCount: Int)
@@ -26,11 +27,12 @@ class DecisionTable(val Rows: List<DecisionTableRow>) {
                 val integerFields = fields.map { it.toIntOrNull() }
 
                 if (integerFields.any { it == null }) {
-                    headerCount++
-                    continue
+                    if (decisionTableRows.isEmpty()) {
+                        headerCount++
+                        continue
+                    } else
+                        throw Exception("Invalid markdown")
                 }
-                else if(integerFields.count() != columnCount)
-                    throw Exception("Invalid markdown")
 
                 decisionTableRows += DecisionTableRow(integerFields.map { (it != 0) })
             }
