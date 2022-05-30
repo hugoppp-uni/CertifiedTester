@@ -1,9 +1,24 @@
 class DecisionTableRow(decisionList: List<Boolean>) {
     val evaluated: Boolean = decisionList.last()
     val subExpressions = decisionList.dropLast(1)
+
+    /**
+     * Excludes the boolean at [columnIndex] from this subexpression.
+     * It's used to determine the rows for MC/DC,
+     * where only [columnIndex] and [evaluated] differ.
+     * @param columnIndex Index of condition column, to exclude.
+     * @return Subexpression list without the condition at index [columnIndex].
+     */
+    fun withoutConditionAt(columnIndex: Int): List<Boolean> {
+        // a bit verbose, but more readable than:
+        //return subExpressions.filterIndexed { i, _ -> i != columnIndex}
+        val list = subExpressions.toMutableList()
+        list.removeAt(columnIndex)
+        return list
+    }
 }
 
-class DecisionTable(val Rows: List<DecisionTableRow>) {
+class DecisionTable(val Rows: List<DecisionTableRow>, val columnCount: Int) {
     companion object {
         data class MdResult(val DecisionTable: DecisionTable, val HeaderCount: Int)
 
@@ -37,7 +52,8 @@ class DecisionTable(val Rows: List<DecisionTableRow>) {
                 decisionTableRows += DecisionTableRow(integerFields.map { (it != 0) })
             }
 
-            return MdResult(DecisionTable(decisionTableRows), headerCount)
+            // columnCount will never be null here
+            return MdResult(DecisionTable(decisionTableRows, columnCount!!), headerCount)
         }
     }
 
