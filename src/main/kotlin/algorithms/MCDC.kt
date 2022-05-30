@@ -15,7 +15,11 @@ class MCDC : Algorithm {
         }
 
         // select appropriate testcases, and try to minimize their number
-        return setOf()
+        val indices = selectPairs(testPairsOfColumn).toSet()
+
+        println(testPairsOfColumn)
+        println("indices: $indices")
+        return indices
     }
 
     /**
