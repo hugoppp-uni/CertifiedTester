@@ -79,6 +79,17 @@ class MCDC : Algorithm {
 
         // in following code, only 1 method/heuristics will be used to try to minimize testcases:
         // pairs that share indices with chosenIndices will be preferred
+
+        if (chosenIndices.isEmpty()) {
+            // you could calculate which index appears in most condition
+            // but we just chose to select a random entry
+            val randomEntry = pairsMapped.random()
+
+            // move randomEntry from remaining Pairs to chosenIndices
+            chosenIndices.addPair(randomEntry.value.random())
+            remainingPairs.remove(randomEntry.key)
+        }
+
         for (pairs in remainingPairs.values) {
             val similarPairs = pairs.filter { it.containsAnyOf(chosenIndices) }
 
