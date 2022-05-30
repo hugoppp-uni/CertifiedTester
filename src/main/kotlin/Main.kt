@@ -43,7 +43,6 @@ fun filterInvalidCases(
     val testCasesToInclude = when (coverageType) {
         CoverageType.MCDC -> MCDC().run(decisionTable)
         CoverageType.MMBUe -> MMBUe().run(decisionTable)
-        else -> throw Exception("'$coverageType' is  unknown")
     }
 
     return (inputText.take(headerLineCount) +
