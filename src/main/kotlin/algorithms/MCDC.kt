@@ -51,4 +51,15 @@ class MCDC : Algorithm {
         }
         return pairs
     }
+
+    /**
+     * Not guaranteed, that they represent the minimal number of testcases!
+     * But the testcases will cover the decision table
+     */
+    private fun selectPairs(pairsMapped: Map<Int, Set<Pair<Int, Int>>>): List<Int> {
+        val remainingPairs = mutableMapOf<Int, Set<Pair<Int, Int>>>()
+        val chosenIndices = mutableListOf<Int>()
+
+        return chosenIndices
+    }
 }
