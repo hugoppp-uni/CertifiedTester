@@ -4,7 +4,15 @@ import DecisionTable
 
 class MCDC : Algorithm {
     override fun run(decisionTable: DecisionTable): Set<Int> {
+        val numOfColumns = decisionTable.columnCount -1
+
         // find testcase pairs for each column/condition
+        // construct map: column -> set<pair>
+        // Iterable.associateWith = make a map using the elements as keys and the function result as value
+        val testPairsOfColumn = (0 until numOfColumns).associateWith { col ->
+            testPairsOfColumns(decisionTable, col)
+        }
+
         // select appropriate testcases, and try to minimize their number
         return setOf()
     }
