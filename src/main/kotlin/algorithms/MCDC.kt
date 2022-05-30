@@ -1,6 +1,7 @@
 package algorithms
 
 import DecisionTable
+import java.util.Random
 
 class MCDC : Algorithm {
     override fun run(decisionTable: DecisionTable): Set<Int> {
@@ -72,6 +73,16 @@ class MCDC : Algorithm {
             }
         }
 
+        // in following code, only 1 method/heuristics will be used to try to minimize testcases:
+        // pairs that share indices with chosenIndices will be preferred
+        for (pairs in remainingPairs.values) {
+            val similarPairs = pairs.filter { it.containsAnyOf(chosenIndices) }
+
+            // take the first pair, or if there arent any, just take a random one
+            // you could use more sophisticated heuristics
+            chosenIndices.addPair(similarPairs.getOrElse(0) { pairs.random() })
+        }
+
         return chosenIndices
     }
 
@@ -79,4 +90,14 @@ class MCDC : Algorithm {
      * add all components (first and second) of [pair] to this list
      */
     private fun <T> MutableList<T>.addPair(pair: Pair<T, T>): Boolean = addAll(pair.toList())
+
+    /**
+     * choose a random entry
+     */
+    private fun <T,U> Map<T,U>.random(): Map.Entry<T,U> = entries.elementAt(Random().nextInt(size))
+
+    /**
+     * @return true if [collection] contains any of this components
+     */
+    private fun <T> Pair<T, T>.containsAnyOf(collection: Collection<T>): Boolean = first in collection || second in collection
 }
