@@ -60,6 +60,23 @@ class MCDC : Algorithm {
         val remainingPairs = mutableMapOf<Int, Set<Pair<Int, Int>>>()
         val chosenIndices = mutableListOf<Int>()
 
+        // partition 'pairsMapped' into to 2 collections
+        for (entry in pairsMapped) {
+            // from a condition with only 1 testPair, exactly that pair must be chosen
+            if (entry.value.size == 1) {
+                chosenIndices.addPair(entry.value.elementAt(0))
+            }
+            // the rest remain to be processed
+            else {
+                remainingPairs[entry.key] = entry.value
+            }
+        }
+
         return chosenIndices
     }
+
+    /**
+     * add all components (first and second) of [pair] to this list
+     */
+    private fun <T> MutableList<T>.addPair(pair: Pair<T, T>): Boolean = addAll(pair.toList())
 }
