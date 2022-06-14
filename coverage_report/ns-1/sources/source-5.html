@@ -1,0 +1,205 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MainKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">&lt;empty package name&gt;</a>
+</div>
+
+<h1>Coverage Summary for Class: MainKt (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Block, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    31.6%
+  </span>
+  <span class="absValue">
+    (6/19)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MainKt$main$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainKt$WhenMappings</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (6/20)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;import algorithms.MCDC
+<i class="no-highlight">2</i>&nbsp;import algorithms.MMBUe
+<i class="no-highlight">3</i>&nbsp;import java.io.File
+<i class="no-highlight">4</i>&nbsp;
+<i class="no-highlight">5</i>&nbsp;
+<i class="no-highlight">6</i>&nbsp;fun main(args: Array&lt;String&gt;) {
+<b class="nc"><i class="no-highlight">7</i>&nbsp;    val typedArgs = Args.create(args)</b>
+<i class="no-highlight">8</i>&nbsp;
+<b class="nc"><i class="no-highlight">9</i>&nbsp;    val tasks = typedArgs.CoverageTypes.zip(typedArgs.Files)</b>
+<b class="nc"><i class="no-highlight">10</i>&nbsp;    println(</b>
+<b class="nc"><i class="no-highlight">11</i>&nbsp;        &quot;Creating coverage into directory &#39;${typedArgs.OutputDir}:\n\n&quot; +</b>
+<b class="nc"><i class="no-highlight">12</i>&nbsp;                tasks.joinToString(separator = &quot;\n&quot;) { &quot;${it.first}: ${it.second}&quot; }</b>
+<i class="no-highlight">13</i>&nbsp;    )
+<i class="no-highlight">14</i>&nbsp;
+<b class="nc"><i class="no-highlight">15</i>&nbsp;    val outputDir = File(typedArgs.OutputDir)</b>
+<i class="no-highlight">16</i>&nbsp;
+<b class="nc"><i class="no-highlight">17</i>&nbsp;    for ((coverageType, filename) in tasks) {</b>
+<i class="no-highlight">18</i>&nbsp;
+<b class="nc"><i class="no-highlight">19</i>&nbsp;        val linesToWrite = filterInvalidCasesFromFile(filename, coverageType)</b>
+<i class="no-highlight">20</i>&nbsp;
+<b class="nc"><i class="no-highlight">21</i>&nbsp;        val outputFileName = &quot;${coverageType}_${File(filename).name}&quot;</b>
+<b class="nc"><i class="no-highlight">22</i>&nbsp;        File(outputDir, outputFileName).writeText(linesToWrite.joinToString(&quot;\n&quot;))</b>
+<i class="no-highlight">23</i>&nbsp;    }
+<i class="no-highlight">24</i>&nbsp;
+<i class="no-highlight">25</i>&nbsp;}
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;fun filterInvalidCasesFromFile(
+<i class="no-highlight">28</i>&nbsp;    filename: String,
+<i class="no-highlight">29</i>&nbsp;    coverageType: CoverageType
+<i class="no-highlight">30</i>&nbsp;): List&lt;String&gt; {
+<b class="nc"><i class="no-highlight">31</i>&nbsp;    val inputFile = File(filename)</b>
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    val inputText = inputFile.readLines()</b>
+<b class="nc"><i class="no-highlight">33</i>&nbsp;    return filterInvalidCases(inputText, coverageType)</b>
+<i class="no-highlight">34</i>&nbsp;}
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;
+<i class="no-highlight">37</i>&nbsp;fun filterInvalidCases(
+<i class="no-highlight">38</i>&nbsp;    inputText: List&lt;String&gt;,
+<i class="no-highlight">39</i>&nbsp;    coverageType: CoverageType
+<i class="no-highlight">40</i>&nbsp;): List&lt;String&gt; {
+<b class="fc"><i class="no-highlight">41</i>&nbsp;    val (decisionTable, headerLineCount) = DecisionTable.createFromMarkdown(inputText)</b>
+<i class="no-highlight">42</i>&nbsp;
+<b class="fc"><i class="no-highlight">43</i>&nbsp;    val testCasesToInclude = when (coverageType) {</b>
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        CoverageType.MCDC -&gt; MCDC().run(decisionTable)</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;        CoverageType.MMBUe -&gt; MMBUe().run(decisionTable)</b>
+<i class="no-highlight">46</i>&nbsp;    }
+<i class="no-highlight">47</i>&nbsp;
+<b class="fc"><i class="no-highlight">48</i>&nbsp;    return (inputText.take(headerLineCount) +</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;            inputText.filterIndexed { index, _ -&gt; testCasesToInclude.contains(index - headerLineCount) })</b>
+<i class="no-highlight">50</i>&nbsp;}
+<i class="no-highlight">51</i>&nbsp;
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-06-14 13:20</div>
+</div>
+</body>
+</html>
